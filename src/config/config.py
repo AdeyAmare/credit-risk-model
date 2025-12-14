@@ -17,7 +17,7 @@ class Config:
         using the DATA_DIR environment variable or a .env file.
     """
 
-    PROJECT_ROOT = Path(__file__).resolve().parents[1]
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]
     DATA_DIR = Path(os.getenv("DATA_DIR", PROJECT_ROOT / "data" / "raw"))
 
 

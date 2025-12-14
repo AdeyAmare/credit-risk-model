@@ -1,4 +1,4 @@
-from src.config import Config
+from src.config.config import Config
 from pathlib import Path
 import pandas as pd
 
