@@ -1,6 +1,7 @@
+
 # Helpers & EDA Unit Tests
 
-This test suite verifies the functionality of the **data helpers** and **EDA pipeline** in this project. It ensures that:
+This test suite verifies the functionality of **data helpers** and the **EDA pipeline** in this project. It ensures that:
 
 1. File paths are correctly generated.
 2. Data directories are created if missing.
@@ -30,22 +31,38 @@ This test suite verifies the functionality of the **data helpers** and **EDA pip
 
 1. **Activate your virtual environment**:
 
-   ```cmd
+   ```bash
    .venv\Scripts\activate
+    ```
+
+2. **Install `pytest`:**
+
+   ```bash
+   pip install pytest
+    ```
+
+3. **Run the tests** from the project root:
+
+   ```bash
+   pytest tests/test_helpers_eda.py
    ```
-2. Run the tests using unittest:
 
-From the project root:
-```cmd
-python -m unittest tests/test_helpers_eda.py
-```
-Or directly:
-```cmd
-python tests/test_helpers_eda.py
-```
-3. Expected output:
-...
-----------------------------------------------------------------------
-Ran 3 tests in 0.XXXs
+4. **Expected output**:
 
-OK
+   ```
+   ============================= test session starts ==============================
+   collected 4 items
+
+   tests/test_helpers_eda.py ....                                          [100%]
+
+   ============================== 4 passed in 0.XXXs ===============================
+   ```
+
+---
+
+### Notes
+
+* `test_load_raw_data` uses a temporary path to check that missing files raise a `FileNotFoundError`.
+* `test_eda_helper` runs `EDAHelper` on a small example DataFrame to validate numeric, categorical, and outlier summaries.
+* All tests are written with **pytest**
+
