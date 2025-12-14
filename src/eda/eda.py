@@ -38,16 +38,16 @@ class EDAHelper:
         """
         Return a table with missing value counts and percentages.
         """
-        n_missing = self.df.isna().sum()
-        pct_missing = (n_missing / len(self.df)) * 100
+        missing_count = self.df.isna().sum()
+        missing_values_percentage = (missing_count / len(self.df)) * 100
 
         return (
             pd.DataFrame({
                 "column": self.df.columns,
-                "n_missing": n_missing.values,
-                "pct_missing": pct_missing.values,
+                "missing_count": missing_count.values,
+                "missing_values_percentage": missing_values_percentage.values,
             })
-            .sort_values("pct_missing", ascending=False)
+            .sort_values("missing_values_percentage", ascending=False)
             .reset_index(drop=True)
         )
 
@@ -80,31 +80,28 @@ class EDAHelper:
         """
         Return outlier statistics for each numeric column using the IQR method.
         """
-        records = []
+        q1 = self.df[self.numeric_cols].quantile(0.25)
+        q3 = self.df[self.numeric_cols].quantile(0.75)
+        iqr = q3 - q1
 
-        for col in self.numeric_cols:
-            q1 = self.df[col].quantile(0.25)
-            q3 = self.df[col].quantile(0.75)
-            iqr = q3 - q1
+        lower = q1 - 1.5 * iqr
+        upper = q3 + 1.5 * iqr
 
-            lower = q1 - 1.5 * iqr
-            upper = q3 + 1.5 * iqr
+        outliers_count = ((self.df[self.numeric_cols] < lower) | (self.df[self.numeric_cols] > upper)).sum()
+        outlier_percentage = outliers_count / len(self.df) * 100
 
-            mask = (self.df[col] < lower) | (self.df[col] > upper)
-            n_outliers = mask.sum()
+        summary_df = pd.DataFrame({
+            "Q1": q1,
+            "Q3": q3,
+            "IQR": iqr,
+            "Lower Bound": lower,
+            "Upper Bound": upper,
+            "Outliers Count": outliers_count,
+            "Outliers %": outlier_percentage
+        })
 
-            records.append({
-                "column": col,
-                "Q1": q1,
-                "Q3": q3,
-                "IQR": iqr,
-                "lower_bound": lower,
-                "upper_bound": upper,
-                "n_outliers": int(n_outliers),
-                "pct_outliers": float(n_outliers / len(self.df) * 100),
-            })
+        return summary_df
 
-        return pd.DataFrame(records)
 
     def run_all(self, top_n=10):
         """
