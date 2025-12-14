@@ -24,9 +24,27 @@ def ensure_dirs():
 # Data loading
 # -----------------------------
 
+
 def load_raw_data(filename="data.csv") -> pd.DataFrame:
     """
-    Load a raw CSV file from the raw data directory.
+    Load a raw CSV file from the raw data directory with basic error handling.
+    
+    Parameters:
+        filename (str): Name of the CSV file to load.
+    
+    Returns:
+        pd.DataFrame: Loaded data.
+    
+    Raises:
+        FileNotFoundError: If the file does not exist.
     """
     path = get_raw_data_path(filename)
-    return pd.read_csv(path)
+    
+    try:
+        return pd.read_csv(path)
+    except FileNotFoundError:
+        print(f"Error: The file '{filename}' was not found at path '{path}'.")
+        raise
+    except Exception as e:
+        print(f"An unexpected error occurred while loading '{filename}': {e}")
+        raise
