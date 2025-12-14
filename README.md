@@ -18,3 +18,22 @@ Predictive power: Complex models (e.g., gradient boosting) often give better acc
 Operational cost & risk management: Interpretable models are cheaper to validate and monitor. Complex models require more governance, monitoring for model drift, and explainability tooling — increasing cost and operational risk. 
 
 Practical guideline: Use a transparent scorecard as the default (meets regulatory and customer-facing needs). Consider complex models only when they deliver clear, measurable business value and you have the governance and explainability measures in place.
+
+## Project Structure
+
+- `src/` – Core Python modules ([see README](src/README.md))  
+- `notebooks/` – Jupyter notebooks demonstrating workflows ([see README](notebooks/README.md))  
+- `data/` – Raw and processed datasets  
+- `requirements.txt` – Project dependencies  
+
+## Quick Start
+
+1. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Open the notebooks in notebooks/ to explore the data and run EDA workflows.
+
+All reusable code lives in src/, ensuring consistent configuration, data handling, and analysis.
