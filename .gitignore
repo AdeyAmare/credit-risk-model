@@ -12,3 +12,8 @@ __pycache__/
 *.pyo
 
 .env
+
+models/
+
+# MLflow runs (experiment tracking data)
+mlruns/
