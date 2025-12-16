@@ -24,7 +24,7 @@ Practical guideline: Use a transparent scorecard as the default (meets regulator
 - `src/` – Core Python modules ([see README](src/README.md))  
 - `notebooks/` – Jupyter notebooks demonstrating workflows ([see README](notebooks/README.md)) 
 - `tests/` - Unit Test files for testing pipelines ([see README](tests/README.md)) 
-- `data/` – Raw and processed datasets  
+- `data/` – Raw and processed datasets (ignored by `.gitignore`) 
 - `requirements.txt` – Project dependencies  
 
 ## Quick Start
