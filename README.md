@@ -22,6 +22,7 @@ Practical guideline: Use a transparent scorecard as the default (meets regulator
 ## Project Structure
 
 - `src/` – Core Python modules ([see README](src/README.md))  
+- `src/api/` – FastAPI service for real-time credit risk predictions using the trained model ([see README](src/api/README.md))
 - `notebooks/` – Jupyter notebooks demonstrating workflows ([see README](notebooks/README.md)) 
 - `tests/` - Unit Test files for testing pipelines ([see README](tests/README.md)) 
 - `data/` – Raw and processed datasets (ignored by `.gitignore`) 
