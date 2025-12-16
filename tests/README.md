@@ -1,12 +1,17 @@
 
-# Helpers & EDA Unit Tests
+#  Unit Tests
 
-This test suite verifies the functionality of **data helpers** and the **EDA pipeline** in this project. It ensures that:
+This test suite verifies the functionality of **data helpers**, the **EDA pipeline**, **Feature Engieering** and **Target Engineering** in this project. It ensures that:
 
 1. File paths are correctly generated.
 2. Data directories are created if missing.
 3. CSV files can be loaded properly.
 4. The `EDAHelper` class produces correct summary statistics.
+5. **Target engineering and feature engineering pipelines** work as expected, including:
+   - RFM calculation
+   - High-risk customer generation
+   - Time-based feature extraction
+   - Full feature engineering pipeline with numeric and categorical processing
 
 ---
 
@@ -24,6 +29,9 @@ This test suite verifies the functionality of **data helpers** and the **EDA pip
   - Missing values
   - Correlation matrix
   - Outlier detection (IQR method)
+- **`src.target_engineering.ProxyTargetGenerator`** — generates customer-level targets, including RFM and high-risk indicators.
+- **`src.data_processing.TimeFeaturesExtractor`** — extracts datetime-based features from transaction data.
+- **`src.data_processing.FeatureEngineeringPipeline`** — performs full feature engineering, including numeric scaling, categorical encoding, and top-k selection.
 
 ---
 
@@ -45,24 +53,36 @@ This test suite verifies the functionality of **data helpers** and the **EDA pip
 
    ```bash
    pytest tests/test_helpers_eda.py
+   pytest tests/test_data_processing.py
+
    ```
 
 4. **Expected output**:
 
-   ```
-   ============================= test session starts ==============================
-   collected 4 items
+  ============================= test session starts ==============================
+collected 8 items
 
-   tests/test_helpers_eda.py ....                                          [100%]
+tests/test_helpers_eda.py ....                                          [100%]
+tests/test_target_feature_engineering.py ....                            [100%]
 
-   ============================== 4 passed in 0.XXXs ===============================
-   ```
+============================== 8 passed in 0.XXXs ==============================
+
 
 ---
 
 ### Notes
 
 * `test_load_raw_data` uses a temporary path to check that missing files raise a `FileNotFoundError`.
+
 * `test_eda_helper` runs `EDAHelper` on a small example DataFrame to validate numeric, categorical, and outlier summaries.
+
+* `test_calculate_rfm validates` that RFM features are correctly calculated per customer.
+
+* `test_generate` verifies high-risk customer generation with clustering.
+
+* `test_time_features_extractor` ensures datetime features are correctly extracted.
+
+* `test_feature_engineering_pipeline` validates numeric and categorical feature processing in the full pipeline.
+
 * All tests are written with **pytest**
 
