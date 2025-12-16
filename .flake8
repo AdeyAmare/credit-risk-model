@@ -1,0 +1,18 @@
+# .flake8
+
+[flake8]
+max-line-length = 79
+extend-ignore =
+    E203,  # whitespace before ':', conflicts with black formatting
+    W503   # line break before binary operator (optional)
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    venv,
+    .venv,
+    data,
+    docs
+show-source = True
+statistics = True
