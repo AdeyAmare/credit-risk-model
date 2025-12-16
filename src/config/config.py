@@ -2,7 +2,9 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+
 load_dotenv()
+
 
 class Config:
     """
@@ -20,5 +22,3 @@ class Config:
     PROJECT_ROOT = Path(__file__).resolve().parents[2]
     DATA_DIR = Path(os.getenv("DATA_DIR", PROJECT_ROOT / "data"))
     models_dir: Path = PROJECT_ROOT / "models"
-
-

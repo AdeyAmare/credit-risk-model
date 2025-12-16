@@ -1,9 +1,12 @@
-
 import pandas as pd
 import pytest
 from src.target_engineering import ProxyTargetGenerator  # replace with actual import
 from src.data_processing import TimeFeaturesExtractor, FeatureEngineeringPipeline
-# Sample data
+
+
+# -----------------------------
+# Sample data fixture
+# -----------------------------
 @pytest.fixture
 def sample_data():
     return pd.DataFrame({
@@ -15,8 +18,8 @@ def sample_data():
         ],
         'Value': [100, 200, 150, 50, 300, 400],
         'Category': ['A', 'B', 'A', 'B', 'C', 'A']
-
     })
+
 
 # -----------------------------
 # Test 1: RFM calculation
@@ -27,6 +30,7 @@ def test_calculate_rfm(sample_data):
     assert isinstance(rfm, pd.DataFrame)
     assert all(col in rfm.columns for col in ['CustomerId', 'recency', 'frequency', 'monetary'])
     assert rfm.shape[0] == 3  # 3 unique customers
+
 
 # -----------------------------
 # Test 2: Full pipeline
@@ -47,7 +51,10 @@ def test_time_features_extractor(sample_data):
     extractor = TimeFeaturesExtractor(datetime_col='TransactionStartTime')
     transformed = extractor.fit_transform(sample_data)
     assert isinstance(transformed, pd.DataFrame)
-    assert all(col in transformed.columns for col in ['txn_hour', 'txn_day', 'txn_month', 'txn_year'])
+    assert all(col in transformed.columns for col in [
+        'txn_hour', 'txn_day', 'txn_month', 'txn_year'
+    ])
+
 
 # -----------------------------
 # Test 4: Full FeatureEngineeringPipeline

@@ -5,12 +5,15 @@ import pandas as pd
 from pathlib import Path
 from src.config.config import Config
 
+
 # -------------------- APP INIT --------------------
 app = FastAPI(title="Credit Risk Prediction API")
 
+
 # -------------------- MODEL SINGLETON --------------------
 _model = None
-MODEL_PATH = Path(Config.models_dir/"best_model.pkl")  # adjust path if different
+MODEL_PATH = Path(Config.models_dir / "best_model.pkl")  # adjust path if different
+
 
 def load_model_once():
     global _model
@@ -20,6 +23,7 @@ def load_model_once():
         _model = joblib.load(MODEL_PATH)
     return _model
 
+
 # -------------------- PREDICTION ENDPOINT --------------------
 @app.post("/predict", response_model=PredictionResponse)
 def predict(request: PredictionRequest):
@@ -28,11 +32,15 @@ def predict(request: PredictionRequest):
         # Convert Pydantic request to DataFrame
         df = pd.DataFrame([request.dict()])
         predicted_risk = model.predict(df)[0]
-        predicted_risk_prob = model.predict_proba(df)[:, 1][0] if hasattr(model, "predict_proba") else None
+        predicted_risk_prob = (
+            model.predict_proba(df)[:, 1][0] if hasattr(model, "predict_proba") else None
+        )
 
         return PredictionResponse(
             predicted_risk=int(predicted_risk),
-            predicted_risk_prob=float(predicted_risk_prob) if predicted_risk_prob is not None else None
+            predicted_risk_prob=float(predicted_risk_prob)
+            if predicted_risk_prob is not None
+            else None,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

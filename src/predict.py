@@ -24,8 +24,7 @@ from pathlib import Path
 
 # -------------------- LOGGING CONFIG --------------------
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -162,16 +161,13 @@ class ModelPredictor:
             logger.error("Failed to load input data", exc_info=True)
             raise exc
 
-        # Preserve CustomerId if present (not used for inference)
         self.customer_ids = self.df.get("CustomerId")
 
-        # Validate required features
         missing_features = [col for col in FEATURE_COLUMNS if col not in self.df.columns]
         if missing_features:
             logger.error(f"Missing required feature columns: {missing_features}")
             raise ValueError(f"Missing required feature columns: {missing_features}")
 
-        # Select and order features
         self.X = self.df[FEATURE_COLUMNS]
         logger.info("Feature matrix prepared successfully")
 
@@ -249,18 +245,21 @@ if __name__ == "__main__":
     Command-line entry point for batch prediction execution.
     """
     parser = argparse.ArgumentParser(description="Make predictions using a trained model.")
-    parser.add_argument("--model_path", type=str, required=True, help="Path to trained model (.pkl)")
-    parser.add_argument("--data_path", type=str, required=True, help="Path to input CSV data")
-    parser.add_argument("--output_path", type=str, default="predictions.csv", help="Output CSV path")
+    parser.add_argument(
+        "--model_path", type=str, required=True, help="Path to trained model (.pkl)"
+    )
+    parser.add_argument(
+        "--data_path", type=str, required=True, help="Path to input CSV data"
+    )
+    parser.add_argument(
+        "--output_path", type=str, default="predictions.csv", help="Output CSV path"
+    )
 
     args = parser.parse_args()
 
     try:
         logger.info("Starting prediction pipeline...")
-        predictor = ModelPredictor(
-            model_path=args.model_path,
-            data_path=args.data_path
-        )
+        predictor = ModelPredictor(model_path=args.model_path, data_path=args.data_path)
         predictor.load_data()
         predictor.load_model()
         predictor.predict()

@@ -2,9 +2,11 @@ from src.config.config import Config
 from pathlib import Path
 import pandas as pd
 
+
 # -----------------------------
 # Path helpers
 # -----------------------------
+
 
 def get_raw_data_path(filename="data.csv") -> Path:
     """
@@ -39,7 +41,7 @@ def load_raw_data(filename="data.csv") -> pd.DataFrame:
         FileNotFoundError: If the file does not exist.
     """
     path = get_raw_data_path(filename)
-    
+
     try:
         return pd.read_csv(path)
     except FileNotFoundError:

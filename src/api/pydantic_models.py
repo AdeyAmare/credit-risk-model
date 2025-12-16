@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class PredictionRequest(BaseModel):
     Amount_sum: float
     Amount_mean: float
@@ -37,6 +38,7 @@ class PredictionRequest(BaseModel):
     recency: float
     frequency: float
     monetary: float
+
 
 class PredictionResponse(BaseModel):
     predicted_risk: int
