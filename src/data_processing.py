@@ -1,13 +1,13 @@
 import pandas as pd
-import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 from typing import List, Optional
 from xverse.transformer import WOE
 import logging
+
 
 # -----------------------------
 # Configure logging
@@ -34,7 +34,9 @@ class TimeFeaturesExtractor(BaseEstimator, TransformerMixin):
     def __init__(self, datetime_col: str):
         self.datetime_col = datetime_col
 
-    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> "TimeFeaturesExtractor":
+    def fit(
+        self, X: pd.DataFrame, y: Optional[pd.Series] = None
+    ) -> "TimeFeaturesExtractor":
         if self.datetime_col not in X.columns:
             raise ValueError(f"Column '{self.datetime_col}' not found in DataFrame")
         logging.info("TimeFeaturesExtractor fit completed.")
@@ -71,11 +73,15 @@ class NumericAggregator(BaseEstimator, TransformerMixin):
         List of numeric columns to aggregate.
     """
 
-    def __init__(self, group_col: str = 'CustomerId', numeric_cols: Optional[List[str]] = None):
+    def __init__(
+        self, group_col: str = 'CustomerId', numeric_cols: Optional[List[str]] = None
+    ):
         self.group_col = group_col
         self.numeric_cols = numeric_cols or []
 
-    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> "NumericAggregator":
+    def fit(
+        self, X: pd.DataFrame, y: Optional[pd.Series] = None
+    ) -> "NumericAggregator":
         missing_cols = [col for col in self.numeric_cols if col not in X.columns]
         if missing_cols:
             raise ValueError(f"Numeric columns missing in DataFrame: {missing_cols}")
@@ -114,13 +120,20 @@ class CategoricalTopKAggregator(BaseEstimator, TransformerMixin):
         Number of top categories to consider per column.
     """
 
-    def __init__(self, group_col: str = 'CustomerId', categorical_cols: Optional[List[str]] = None, top_k: int = 3):
+    def __init__(
+        self,
+        group_col: str = 'CustomerId',
+        categorical_cols: Optional[List[str]] = None,
+        top_k: int = 3
+    ):
         self.group_col = group_col
         self.categorical_cols = categorical_cols or []
         self.top_k = top_k
         self.top_categories_: dict = {}
 
-    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> "CategoricalTopKAggregator":
+    def fit(
+        self, X: pd.DataFrame, y: Optional[pd.Series] = None
+    ) -> "CategoricalTopKAggregator":
         if self.group_col not in X.columns:
             raise ValueError(f"Group column '{self.group_col}' not found in DataFrame")
         for col in self.categorical_cols:
@@ -173,19 +186,23 @@ class FeatureEngineeringPipeline(BaseEstimator, TransformerMixin):
         Top-K categories to consider for categorical aggregation.
     """
 
-    def __init__(self,
-                 datetime_col: str = 'TransactionStartTime',
-                 group_col: str = 'CustomerId',
-                 numeric_cols: Optional[List[str]] = None,
-                 categorical_cols: Optional[List[str]] = None,
-                 top_k: int = 3):
+    def __init__(
+        self,
+        datetime_col: str = 'TransactionStartTime',
+        group_col: str = 'CustomerId',
+        numeric_cols: Optional[List[str]] = None,
+        categorical_cols: Optional[List[str]] = None,
+        top_k: int = 3
+    ):
         self.datetime_col = datetime_col
         self.group_col = group_col
         self.numeric_cols = numeric_cols or ['Amount']
         self.categorical_cols = categorical_cols or []
         self.top_k = top_k
 
-    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> "FeatureEngineeringPipeline":
+    def fit(
+        self, X: pd.DataFrame, y: Optional[pd.Series] = None
+    ) -> "FeatureEngineeringPipeline":
         logging.info("Fitting FeatureEngineeringPipeline...")
 
         # Time features
@@ -201,9 +218,11 @@ class FeatureEngineeringPipeline(BaseEstimator, TransformerMixin):
         X_num_agg = self.numeric_agg.fit_transform(X_time)
 
         # Categorical top-K aggregation
-        self.cat_agg = CategoricalTopKAggregator(group_col=self.group_col,
-                                                 categorical_cols=self.categorical_cols,
-                                                 top_k=self.top_k)
+        self.cat_agg = CategoricalTopKAggregator(
+            group_col=self.group_col,
+            categorical_cols=self.categorical_cols,
+            top_k=self.top_k
+        )
         X_cat_agg = self.cat_agg.fit_transform(X_time)
 
         # Columns for preprocessor
@@ -212,9 +231,13 @@ class FeatureEngineeringPipeline(BaseEstimator, TransformerMixin):
 
         # Preprocessor
         self.preprocessor = ColumnTransformer(transformers=[
-            ('num', Pipeline([('imputer', SimpleImputer(strategy='median')),
-                              ('scaler', StandardScaler())]), self.all_numeric_cols),
-            ('cat', Pipeline([('imputer', SimpleImputer(strategy='constant', fill_value=0))]), self.all_categorical_cols)
+            ('num', Pipeline([
+                ('imputer', SimpleImputer(strategy='median')),
+                ('scaler', StandardScaler())
+            ]), self.all_numeric_cols),
+            ('cat', Pipeline([
+                ('imputer', SimpleImputer(strategy='constant', fill_value=0))
+            ]), self.all_categorical_cols)
         ])
 
         # Fit preprocessor

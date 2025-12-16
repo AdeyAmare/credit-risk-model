@@ -8,3 +8,6 @@ seaborn
 pytest
 xverse
 mlflow
+fastapi 
+uvicorn
+flake8

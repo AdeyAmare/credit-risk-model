@@ -1,0 +1,18 @@
+# .flake8
+[flake8]
+max-line-length = 110
+extend-ignore =
+    W291,  
+    W293,  
+    W391   
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    venv,
+    .venv,
+    data,
+    docs
+show-source = True
+statistics = True

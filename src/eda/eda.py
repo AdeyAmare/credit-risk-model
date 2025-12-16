@@ -20,7 +20,9 @@ class EDAHelper:
         """
         self.df = df
         self.numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-        self.categorical_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
+        self.categorical_cols = df.select_dtypes(
+            include=["object", "category"]
+        ).columns.tolist()
 
     def overview(self):
         """
@@ -42,11 +44,13 @@ class EDAHelper:
         missing_values_percentage = (missing_count / len(self.df)) * 100
 
         return (
-            pd.DataFrame({
-                "column": self.df.columns,
-                "missing_count": missing_count.values,
-                "missing_values_percentage": missing_values_percentage.values,
-            })
+            pd.DataFrame(
+                {
+                    "column": self.df.columns,
+                    "missing_count": missing_count.values,
+                    "missing_values_percentage": missing_values_percentage.values,
+                }
+            )
             .sort_values("missing_values_percentage", ascending=False)
             .reset_index(drop=True)
         )
@@ -87,21 +91,24 @@ class EDAHelper:
         lower = q1 - 1.5 * iqr
         upper = q3 + 1.5 * iqr
 
-        outliers_count = ((self.df[self.numeric_cols] < lower) | (self.df[self.numeric_cols] > upper)).sum()
+        outliers_count = (
+            (self.df[self.numeric_cols] < lower) | (self.df[self.numeric_cols] > upper)
+        ).sum()
         outlier_percentage = outliers_count / len(self.df) * 100
 
-        summary_df = pd.DataFrame({
-            "Q1": q1,
-            "Q3": q3,
-            "IQR": iqr,
-            "Lower Bound": lower,
-            "Upper Bound": upper,
-            "Outliers Count": outliers_count,
-            "Outliers %": outlier_percentage
-        })
+        summary_df = pd.DataFrame(
+            {
+                "Q1": q1,
+                "Q3": q3,
+                "IQR": iqr,
+                "Lower Bound": lower,
+                "Upper Bound": upper,
+                "Outliers Count": outliers_count,
+                "Outliers %": outlier_percentage,
+            }
+        )
 
         return summary_df
-
 
     def run_all(self, top_n=10):
         """

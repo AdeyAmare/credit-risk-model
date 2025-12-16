@@ -1,5 +1,4 @@
 """
-
 End-to-end training pipeline for high-risk customer classification.
 
 This script:
@@ -179,7 +178,7 @@ class ModelTrainer:
             param_grid=rf_params,
             cv=5,
             scoring="roc_auc",
-            n_jobs=-1
+            n_jobs=-1,
         )
 
         rf_grid.fit(self.X_train, self.y_train)
@@ -210,7 +209,7 @@ class ModelTrainer:
             param_grid=lr_params,
             cv=5,
             scoring="roc_auc",
-            n_jobs=-1
+            n_jobs=-1,
         )
 
         lr_grid.fit(self.X_train, self.y_train)
@@ -242,7 +241,9 @@ class ModelTrainer:
         mlruns_path = Path(self.save_dir) / "mlruns"
 
         try:
-            mlflow.set_tracking_uri(f"file:///{mlruns_path.resolve().as_posix()}")
+            mlflow.set_tracking_uri(
+                f"file:///{mlruns_path.resolve().as_posix()}"
+            )
             mlflow.set_experiment("HighRisk_Model_Comparison")
         except Exception as e:
             logger.critical(f"MLflow setup failed: {e}")
@@ -290,7 +291,10 @@ class ModelTrainer:
             )
 
         try:
-            joblib.dump(best_model, Path(self.save_dir) / "best_model.pkl")
+            joblib.dump(
+                best_model,
+                Path(self.save_dir) / "best_model.pkl"
+            )
             logger.info("Best model saved as best_model.pkl")
         except Exception as e:
             logger.critical(f"Failed to save best model: {e}")
@@ -300,7 +304,9 @@ class ModelTrainer:
 # -------------------- ENTRY POINT --------------------
 if __name__ == "__main__":
     try:
-        trainer = ModelTrainer(data_path="data/processed/modeling_dataset.csv")
+        trainer = ModelTrainer(
+            data_path="data/processed/modeling_dataset.csv"
+        )
         trainer.load_data()
         trainer.train_models()
         trainer.evaluate_and_log()

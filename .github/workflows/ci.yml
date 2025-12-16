@@ -1,27 +1,32 @@
-name: CI   # Name of the workflow
+name: CI
 
-on: [push, pull_request]   # 👈 When this workflow is triggered
-# It runs automatically every time you push code or open a pull request.
+on:
+  push:
+    branches: ["*"]       # Trigger on any branch push
+     # Trigger on PRs targeting main
 
 jobs:
-  build:                    # A job is a group of steps
-    runs-on: ubuntu-latest  # The virtual machine (OS) GitHub will use
+  build-and-test:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        # ✅ Step 1: Check out your code from GitHub so it can be used in the workflow
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-        # ✅ Step 2: Install Python version 3.11 on the runner (VM)
+          python-version: 3.12
 
-      - name: Install deps
-        run: pip install -r requirements.txt
-        # ✅ Step 3: Install all Python packages listed in requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run linter
+        run: |
+          flake8 src tests
 
       - name: Run tests
-        run: python --version
-        # ✅ Step 4: Example test step — here it just prints the Python version
-        # You can replace this with 'pytest' or your test command later.
+        run: |
+          pytest tests --maxfail=1 --disable-warnings -q

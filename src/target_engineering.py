@@ -12,6 +12,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
+
 class ProxyTargetGenerator:
     """
     Generates a proxy credit risk target variable (`is_high_risk`) 
@@ -26,7 +27,8 @@ class ProxyTargetGenerator:
     value_col : str
         Name of the transaction value column. Default is 'Value'.
     snapshot_date : str or pd.Timestamp, optional
-        Reference date for recency calculation. Defaults to one day after the latest transaction.
+        Reference date for recency calculation. Defaults to one day after
+        the latest transaction.
     n_clusters : int
         Number of clusters to form using KMeans. Default is 3.
     random_state : int
@@ -160,7 +162,9 @@ class ProxyTargetGenerator:
         if rfm_scaled.empty:
             raise ValueError("Input rfm_scaled DataFrame is empty")
         if rfm_scaled.shape[1] != 3:
-            raise ValueError("rfm_scaled must have exactly 3 columns: ['recency', 'frequency', 'monetary']")
+            raise ValueError(
+                "rfm_scaled must have exactly 3 columns: ['recency', 'frequency', 'monetary']"
+            )
 
         kmeans = KMeans(
             n_clusters=self.n_clusters,
