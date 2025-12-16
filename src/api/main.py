@@ -17,7 +17,6 @@ MODEL_PATH = Path(
 )
 
 
-
 def load_model_once():
     global _model
     if _model is None:
