@@ -40,3 +40,4 @@ def test_eda_helper():
     assert "num" in results["numeric_summary"].index
     assert "cat" in results["categorical_summary"]
     assert "Outliers Count" in results["outlier_summary"].columns
+

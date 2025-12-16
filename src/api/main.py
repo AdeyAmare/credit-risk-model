@@ -12,7 +12,10 @@ app = FastAPI(title="Credit Risk Prediction API")
 
 # -------------------- MODEL SINGLETON --------------------
 _model = None
-MODEL_PATH = Path(Config.models_dir / "best_model.pkl")  # adjust path if different
+MODEL_PATH = Path(
+    Config.models_dir / "best_model.pkl"
+)
+
 
 
 def load_model_once():
